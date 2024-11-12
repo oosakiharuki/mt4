@@ -147,3 +147,78 @@ float Mulcty(const Vector3& v1, const Vector3& v2) {
 
 	return result;
 }
+
+//lhs = p / rhs = r
+Quaternion Multiply(const Quaternion& lhs, const Quaternion& rhs) {
+	Quaternion result;//pr
+
+	result.w = lhs.w * rhs.w - lhs.x * rhs.x - lhs.y * rhs.y - lhs.z * rhs.z;
+
+	result.x = lhs.y * rhs.z - lhs.z * rhs.y + rhs.w * lhs.x + lhs.w * rhs.x;
+
+	result.y = lhs.z * rhs.x - lhs.x * rhs.z + rhs.w * lhs.y + lhs.w * rhs.y;
+
+	result.z = lhs.x * rhs.y - lhs.y * rhs.x + rhs.w * lhs.z + lhs.w * rhs.z;
+
+	return result;
+}
+
+Quaternion IdentityQuaternion() {
+	Quaternion result;//pr
+
+	result.w = 1.0f;
+	
+	result.x = 0.0f;
+
+	result.y = 0.0f;
+
+	result.z = 0.0f;
+
+	return result;
+}
+
+Quaternion Conjugate(const Quaternion& quaternion) {
+	Quaternion result;//pr
+
+	result.w = quaternion.w;
+
+	result.x = -quaternion.x;
+
+	result.y = -quaternion.y;
+
+	result.z = -quaternion.z;
+
+	return result;
+}
+
+float Norm(const Quaternion& quaternion) {
+
+	float result;
+
+	result = (float)sqrt((quaternion.w * quaternion.w) + (quaternion.x * quaternion.x) + (quaternion.y * quaternion.y) + (quaternion.z * quaternion.z));
+
+	return result;
+}
+
+
+Quaternion Normalize(const Quaternion& quaternion) {
+	Quaternion result;
+
+	result.w = quaternion.w / (float)sqrt((quaternion.w * quaternion.w) + (quaternion.x * quaternion.x) + (quaternion.y * quaternion.y) + (quaternion.z * quaternion.z));
+	result.x = quaternion.x / (float)sqrt((quaternion.w * quaternion.w) + (quaternion.x * quaternion.x) + (quaternion.y * quaternion.y) + (quaternion.z * quaternion.z));
+	result.y = quaternion.y / (float)sqrt((quaternion.w * quaternion.w) + (quaternion.x * quaternion.x) + (quaternion.y * quaternion.y) + (quaternion.z * quaternion.z));
+	result.z = quaternion.z / (float)sqrt((quaternion.w * quaternion.w) + (quaternion.x * quaternion.x) + (quaternion.y * quaternion.y) + (quaternion.z * quaternion.z));
+
+	return result;
+}
+
+Quaternion Inverse(const Quaternion& quaternion) {
+	Quaternion result;
+
+	result.w = Conjugate(quaternion).w / (Norm(quaternion) * Norm(quaternion));
+	result.x = Conjugate(quaternion).x / (Norm(quaternion) * Norm(quaternion));
+	result.y = Conjugate(quaternion).y / (Norm(quaternion) * Norm(quaternion));
+	result.z = Conjugate(quaternion).z / (Norm(quaternion) * Norm(quaternion));
+
+	return result;
+}
