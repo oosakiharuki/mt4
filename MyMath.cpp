@@ -222,3 +222,24 @@ Quaternion Inverse(const Quaternion& quaternion) {
 
 	return result;
 }
+
+
+Quaternion MakeRotateAxisAngleQuaternion(const Vector3& axis, float angle) {
+	Quaternion r = { axis.x,axis.y, axis.z, 0 };
+	
+	r.w = cos(angle / 2) * Norm(r);
+	r.x = sin(angle / 2) * axis.x;
+	r.y = sin(angle / 2) * axis.y;
+	r.z = sin(angle / 2) * axis.z;
+
+	return r;
+}
+
+
+//Vector3 RotateVector(const Vector3& vector, const Quaternion& quaternion) {
+//
+//}
+//
+//Matrix4x4 MakeRotateMatrix(const Quaternion& quaternion) {
+//
+//}
