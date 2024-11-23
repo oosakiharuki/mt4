@@ -14,6 +14,21 @@ Vector3 Normalize(const Vector3& v) {
 	return result;
 }
 
+Vector3 Transform(const Vector3& vector, const Matrix4x4& matrix) {
+	Vector3 result{};
+
+	result.x = vector.x * matrix.m[0][0] + vector.y * matrix.m[1][0] + vector.z * matrix.m[2][0] + 1.0f * matrix.m[3][0];
+	result.y = vector.x * matrix.m[0][1] + vector.y * matrix.m[1][1] + vector.z * matrix.m[2][1] + 1.0f * matrix.m[3][1];
+	result.z = vector.x * matrix.m[0][2] + vector.y * matrix.m[1][2] + vector.z * matrix.m[2][2] + 1.0f * matrix.m[3][2];
+	float w = vector.x * matrix.m[0][3] + vector.y * matrix.m[1][3] + vector.z * matrix.m[2][3] + 1.0f * matrix.m[3][3];
+	assert(w != 0.0f);
+	result.x /= w;
+	result.y /= w;
+	result.z /= w;
+
+	return result;
+}
+
 Vector3 Cross(const Vector3& v1, const Vector3& v2) {
 	Vector3 result;
 
@@ -236,10 +251,51 @@ Quaternion MakeRotateAxisAngleQuaternion(const Vector3& axis, float angle) {
 }
 
 
-//Vector3 RotateVector(const Vector3& vector, const Quaternion& quaternion) {
-//
-//}
-//
-//Matrix4x4 MakeRotateMatrix(const Quaternion& quaternion) {
-//
-//}
+Vector3 RotateVector(const Vector3& vector, const Quaternion& quaternion) {
+	
+	Quaternion r{};
+
+
+	r = Multiply(quaternion, Quaternion(vector.x, vector.y, vector.z, 0));
+
+
+	Quaternion conjugate =  Conjugate(quaternion);
+	
+	Quaternion result{};
+
+	result = Multiply(r, conjugate);
+
+
+	return Vector3(result.x,result.y,result.z);
+}
+
+Matrix4x4 MakeRotateMatrix(const Quaternion& quaternion) {
+	Matrix4x4 r{};
+
+	r.m[0][0] = (quaternion.w * quaternion.w) + (quaternion.x * quaternion.x) -
+		(quaternion.y * quaternion.y) - (quaternion.z * quaternion.z);
+	r.m[0][1] = 2 * (quaternion.x * quaternion.y + quaternion.w * quaternion.z);
+	r.m[0][2] = 2 * (quaternion.x * quaternion.z - quaternion.w * quaternion.y);
+	r.m[0][3] = 0;
+	
+
+	r.m[1][0] = 2 * (quaternion.x * quaternion.y - quaternion.w * quaternion.z);
+	r.m[1][1] = (quaternion.w * quaternion.w) - (quaternion.x * quaternion.x) +
+		(quaternion.y * quaternion.y) - (quaternion.z * quaternion.z);
+	r.m[1][2] = 2 * (quaternion.y * quaternion.z + quaternion.w * quaternion.x);
+	r.m[1][3] = 0;
+
+
+	r.m[2][0] = 2 * (quaternion.x * quaternion.z + quaternion.w * quaternion.y);
+	r.m[2][1] = 2 * (quaternion.y * quaternion.z - quaternion.w * quaternion.x);
+	r.m[2][2] = (quaternion.w * quaternion.w) - (quaternion.x * quaternion.x) -
+		(quaternion.y * quaternion.y) + (quaternion.z * quaternion.z);
+	r.m[2][3] = 0;
+
+	r.m[0][3] = 0;
+	r.m[1][3] = 0;
+	r.m[2][3] = 0;
+	r.m[3][3] = 1;
+ 
+	return r;
+}

@@ -13,6 +13,7 @@ Vector3 operator*(const Vector3& v1, const Vector3& v2);
 float Mulcty(const Vector3& vewsf, const Vector3& v2);
 
 Vector3 Normalize(const Vector3& v);
+Vector3 Transform(const Vector3& vector, const Matrix4x4& matrix);
 Vector3 Cross(const Vector3& v1, const Vector3& v2);
 
 Matrix4x4 MakeRotateAxisAngle(const Vector3& axis, float angle);
