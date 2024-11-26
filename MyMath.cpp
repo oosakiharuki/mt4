@@ -299,3 +299,72 @@ Matrix4x4 MakeRotateMatrix(const Quaternion& quaternion) {
  
 	return r;
 }
+
+Quaternion operator-(const Quaternion& q) {
+	Quaternion result;
+	result.x = -q.x;
+	result.y = -q.y;
+	result.z = -q.z;
+	result.w = -q.w;
+	return result;
+}
+
+Quaternion operator*(const float f,const Quaternion& q) {
+	Quaternion result;
+	result.x = f * q.x;
+	result.y = f * q.y;
+	result.z = f * q.z;
+	result.w = f * q.w;
+	return result;
+}
+
+Quaternion operator+(const Quaternion& q0, const Quaternion& q1) {
+	Quaternion result;
+	result.x = q0.x + q1.x;
+	result.y = q0.y + q1.y;
+	result.z = q0.z + q1.z;
+	result.w = q0.w + q1.w;
+	return result;
+}
+
+
+float MulctyQuaternion(const Quaternion& q1, const Quaternion& q2) {
+	Quaternion r;
+
+	r.x = q1.x * q2.x;
+	r.y = q1.y * q2.y;
+	r.z = q1.z * q2.z;
+	r.w = q1.w * q2.w;
+
+	float result;
+
+	result = r.x + r.y + r.z + r.w;
+
+	return result;
+}
+
+
+
+Quaternion Slerp(const Quaternion& q0, const Quaternion& q1, float t) {
+
+	Quaternion q3 = q0;
+
+	float dot = MulctyQuaternion(q0, q1);
+
+	if (dot < 0) {
+		q3 = -q0;
+		dot = -dot;
+	}
+
+	float theta = std::acos(dot);
+
+	float scale0;
+
+	scale0 = sin((1 - t) * theta) / sin(theta);
+	
+	float scale1;
+
+	scale1 = sin(t * theta) / sin(theta);
+
+	return scale0 * q3 + scale1 * q1;
+}
