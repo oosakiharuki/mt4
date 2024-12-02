@@ -3,6 +3,7 @@
 #include <Novice.h>
 #include <cmath>
 #include <assert.h>
+#include <limits>
 
 using namespace std;
 
@@ -354,6 +355,10 @@ Quaternion Slerp(const Quaternion& q0, const Quaternion& q1, float t) {
 	if (dot < 0) {
 		q3 = -q0;
 		dot = -dot;
+	}
+
+	if (dot >= 1.0f - FLT_EPSILON) {
+		return (1.0f - t) * q3 + t * q1;
 	}
 
 	float theta = std::acos(dot);
